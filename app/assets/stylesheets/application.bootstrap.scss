@@ -1,0 +1,45 @@
+// Define custom colors
+$primary: #025172; // Base primary color
+$primary-darken: darken($primary, 10%); // Darker shade for hover
+$primary-lighten: lighten($primary, 5%); // Slightly lighter shade
+
+// Override Bootstrap button colors
+$btn-primary-bg: $primary;
+$btn-primary-border: $primary;
+$btn-primary-hover-bg: $primary-darken;
+$btn-primary-hover-border: $primary-darken;
+$btn-primary-active-bg: $primary-darken;
+$btn-primary-active-border: $primary-darken;
+$btn-primary-disabled-bg: $primary-lighten;
+$btn-primary-disabled-border: $primary-lighten;
+
+// Customize toastr "info" toast
+#toast-container > .toast-info {
+  background-color: $primary-darken !important; // Use primary color
+  border-color: $primary-darken !important; // Optional: Add a darker border
+  color: #fff !important; // Ensure text is readable on the primary background
+}
+
+@import 'bootstrap/scss/bootstrap';
+@import 'bootstrap-icons/font/bootstrap-icons';
+@import "toastr";
+
+body {
+  height: 100%;
+}
+
+.form-signin {
+  max-width:350px;
+  padding: 1rem;
+}
+
+.links {
+  font-weight: 700;
+  color: var(--bs-primary-text-emphasis) !important;
+}
+
+.padding-alert-buttons {
+  padding: 5px !important;
+  padding-left: 15px !important;
+}
+

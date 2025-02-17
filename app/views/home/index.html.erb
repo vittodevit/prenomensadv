@@ -1,0 +1,78 @@
+<main class="container py-3">
+  <% if current_user&.tutor? %>
+    <div class="alert alert-primary mb-2 padding-alert-buttons">
+      <div class="row">
+        <div class="col d-flex align-items-center">
+          <b>
+            <i class="bi bi-universal-access me-2"></i>
+            FUNZIONI TUTOR
+          </b>
+        </div>
+        <div class="col-auto d-flex flex-row gap-1">
+          <%= link_to "Richieste", requests_path, class: "btn btn-primary" %>
+          <%= link_to "Lista Utenti", user_list_path, class: "btn btn-primary" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <% if current_user&.student? and @requests_without_response %>
+    <% @requests_without_response.each do |request| %>
+      <div class="alert alert-warning d-flex justify-content-between align-items-center mb-1">
+    <span>
+      <i class="bi bi-exclamation-triangle-fill me-2"></i>
+      <b>Richiesta in attesa di risposta! </b><br>
+      <b>Data richiesta:</b>
+      <%= I18n.l(request.created_at.in_time_zone("Europe/Rome"), format: :short) %><br>
+      <b>Scadenza:</b>
+      <%= I18n.l(Date.parse(request.due_date.to_s), format: :default) %>
+    </span>
+        <%= link_to "Rispondi", request_responses_path(request), class: "btn btn-warning" %>
+      </div>
+    <% end %>
+  <% end %>
+
+  <% if @menu_data == nil %>
+    <div class="alert alert-primary" role="alert">
+      <i class="bi bi-info-circle-fill me-2"></i>
+      <%= t("data_not_published") %>
+    </div>
+  <% else %>
+    <div class="d-flex justify-content-between align-items-center mb-4 rounded border padding-alert-buttons">
+      <p class="mb-0 fw-bold"><%= t("last_fetched") %>: <%= Time.now.strftime("%d/%m/%Y %H:%M") %></p>
+      <%= button_to t("reload_page"), root_path, method: :get, class: "btn btn-primary" %>
+    </div>
+
+    <% @menu_data.each do |section| %>
+      <div class="mb-4">
+        <h2 class="h4 fw-semibold mb-3"><%= section[:title] %></h2>
+
+        <% section[:items].each do |item| %>
+          <div class="border rounded p-3 mb-3">
+            <h3 class="h5 fw-medium mb-2"><%= item[:name] %></h3>
+            <div>
+              <strong><%= t("gluten_free") %>:</strong>
+              <%= item[:glutenFree] ? t("yesword") : "No" %>
+            </div>
+            <div>
+              <strong><%= t("lactose_free") %>:</strong>
+              <%= item[:lactoseFree] ? t("yesword") : 'No' %>
+            </div>
+            <% if item[:ingredienti].present? %>
+              <div>
+                <strong><%= t("ingredients") %>:</strong>
+                <%= item[:ingredienti].join(", ") %>
+              </div>
+            <% end %>
+            <% if item[:ingredientiAllergeni].present? %>
+              <div>
+                <strong><%= t("allergic_ingredients") %>:</strong>
+                <%= item[:ingredientiAllergeni].join(", ") %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
+</main>

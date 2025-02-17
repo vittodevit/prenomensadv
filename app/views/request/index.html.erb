@@ -1,0 +1,58 @@
+<div class="container mt-3">
+  <div class="d-flex justify-content-between flex-row gap-1 border p-2">
+    <h5 style="margin-bottom: 0;">Lista richieste presenze</h5>
+    <div class="d-flex gap-1 flex-row">
+      <%= link_to "Nuova Richiesta", new_request_path, class: "btn btn-sm btn-success" %>
+      <%= link_to "Torna alla home  ", _back_url, class: "btn btn-sm btn-primary" %>
+    </div>
+  </div>
+  <div class="border p-2">
+    <table class="table table-striped table-bordered table-hover mb-0">
+      <thead>
+      <tr>
+        <th scope="col">Data creazione</th>
+        <th scope="col">Data di scadenza</th>
+        <th scope="col">Giorni di presenza</th>
+        <th scope="col">Num. risposte</th>
+        <th scope="col" style="width: 1px;">Azioni</th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @requests.each do |request| %>
+        <tr>
+          <td><%= I18n.l(request.created_at.in_time_zone("Europe/Rome"), format: :short) %></td>
+          <td>
+            <% if request.due_date < Date.today %>
+              <span class="badge text-bg-danger"><%= I18n.l(request.due_date, format: :default) %></span>
+            <% else %>
+              <span class="badge text-bg-success"><%= I18n.l(request.due_date, format: :default) %></span>
+            <% end %>
+          </td>
+          <td>
+            <span class="badge text-bg-secondary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true"
+                  data-bs-title="
+                      <% request.dates.each do |date| %>
+                         - <%= I18n.l(Date.parse(date), format: :default) %> <br/>
+                      <% end %>
+                       ">
+                  Mostra date
+                </span>
+          </td>
+          <td><%= request.responses_count %> / <%= @number_of_students %></td>
+          <td>
+            <div class="d-flex flex-row gap-1">
+              <%= link_to "Risposte", view_responses_path(request), class: "btn btn-sm btn-primary" %>
+              <%= link_to "Notifica", requests_path(request), class: "btn btn-sm btn-primary" %>
+              <%= button_to "Elimina", delete_request_path(request), method: :delete, class: "btn btn-sm btn-danger" %>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<script>
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+</script>

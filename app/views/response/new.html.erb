@@ -1,0 +1,42 @@
+<div class="container mt-3">
+  <div class="alert alert-warning mt-1 mb-3" role="alert">
+    <i class="bi bi-exclamation-triangle"></i>
+    <b>Attenzione!</b> Una volta salvata non è possibile modificare la risposta.
+  </div>
+  <div class="d-flex justify-content-between flex-row gap-1 border p-2">
+    <h5 style="margin-bottom: 0;">Risposta alla richiesta</h5>
+    <div class="d-flex gap-1 flex-row">
+      <%= link_to "Torna indietro  ", _back_url, class: "btn btn-sm btn-primary" %>
+    </div>
+  </div>
+  <div class="border w-100 p-2">
+    <strong>Tutor:</strong> <%= @tutor_name %> <br>
+    <strong>Data richiesta:</strong> <%= I18n.l(@request.created_at, format: :short) %> <br>
+    <strong>Data scadenza:</strong> <%= I18n.l(@request.due_date, format: :default) %> <br>
+    <% unless @request.annotations.blank?  %>
+      <strong>Annotazioni del tutor:</strong><br>
+      <%= @request.annotations %> <br>
+    <% end %>
+  </div>
+
+  <%= form_with(model: [@request, @response], local: true) do |form| %>
+
+    <div class="border p-2">
+      <h5 class="mb-2">Date di presenza</h5>
+      <% @request.dates.each do |date| %>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="<%= date %>" id="ck_<%= date %>" name="response[days][]">
+          <label class="form-check-label" for="ck_<%= date %>">
+            <%= I18n.l(Date.parse(date), format: :extensive) %>
+          </label>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="mb-3 border p-2 d-flex flex-row justify-content-end">
+      <%= form.submit "Salva Risposta", class: "btn btn-sm btn-primary" %>
+    </div>
+  <% end %>
+</div>
+
+

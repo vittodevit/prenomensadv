@@ -1,0 +1,85 @@
+<div class="container mt-3">
+  <div class="alert alert-warning mt-1 mb-3" role="alert">
+    <i class="bi bi-exclamation-triangle"></i>
+    <b>Attenzione!</b> Una volta salvata non è possibile modificare la richiesta.
+  </div>
+  <div class="d-flex justify-content-between flex-row gap-1 border p-2">
+    <h5 style="margin-bottom: 0;">Nuova richiesta presenze</h5>
+    <div class="d-flex gap-1 flex-row">
+      <%= link_to "Torna indietro  ", _back_url, class: "btn btn-sm btn-primary" %>
+    </div>
+  </div>
+
+  <%= form_with model: @request, local: true do |form| %>
+    <!-- Hidden Field for User ID -->
+    <%= form.hidden_field :user_id, value: session[:user_id] %>
+
+    <!-- Due Date Field -->
+    <div class="form-floating mt-1 mb-1">
+      <%= form.date_field :due_date, class: "form-control" %>
+      <%= form.label :due_date, "Data di scadenza della richiesta" %>
+    </div>
+
+    <!-- Notes Field -->
+    <div class="mt-1 mb-1">
+      <div class="d-flex justify-content-between flex-row gap-1 border p-2 mb-1">
+        <b>Note aggiuntive</b>
+      </div>
+      <%= form.text_area :notes, class: "form-control", placeholder: "note..." %>
+    </div>
+
+    <!-- Dates Field (Dynamic List) -->
+    <div class="form-group mt-2">
+      <div class="d-flex justify-content-between flex-row gap-1 border p-2 mb-1">
+        <b>Giorni di presenza</b>
+      </div>
+      <div id="dates-fields">
+        <div class="d-flex flex-row gap-1 mb-1">
+          <input type="date" name="request[dates][]" class="form-control" />
+          <button type="button" class="btn btn-danger remove-date" onclick="removeDateField(this)">
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+      </div>
+      <div class="w-100 d-flex flex-row justify-content-end">
+        <button type="button" id="add-date" class="btn btn-success">
+          <i class="bi bi-plus-circle"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="w-100 d-flex flex-row justify-content-center mt-1">
+      <%= form.submit "Crea Richiesta", class: "btn btn-primary" %>
+    </div>
+  <% end %>
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const addDateButton = document.getElementById("add-date");
+        const datesContainer = document.getElementById("dates-fields");
+
+        // Add a new date field
+        addDateButton.addEventListener("click", () => {
+            const dateField = document.createElement("div");
+            dateField.classList.add("d-flex");
+            dateField.classList.add("flex-row");
+            dateField.classList.add("gap-1");
+            dateField.classList.add("mb-1");
+            dateField.innerHTML = `
+              <input type="date" name="request[dates][]" class="form-control" />
+              <button type="button" class="btn btn-danger remove-date" onclick="removeDateField(this)">
+                <i class="bi bi-trash"></i>
+              </button>
+    `;
+            datesContainer.appendChild(dateField);
+        });
+    });
+
+    // Function to remove a specific date field
+    function removeDateField(button) {
+        button.parentElement.remove();
+    }
+</script>
