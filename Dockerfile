@@ -32,7 +32,8 @@ FROM base AS build
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y build-essential git nodejs npm libpq-dev pkg-config && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives && \
-    npm install --global yarn
+    npm install -g corepack && \
+    corepack enable
 
 # Install application gems
 COPY Gemfile Gemfile.lock ./
